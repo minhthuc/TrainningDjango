@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+    <form action="{% url '' %}"></form>
+    <h2>
+        {{ post.title }}
+    </h2>
+    <p style="margin-left: 100px">
+    {{ post.author.name }}
+    </p>
+    <p>
+        {{ post.content }}
+    </p>
+{% endblock %}

@@ -1,0 +1,25 @@
+{%  extends "index.html" %}
+{% block title %}
+    <title> {{ title }}</title>
+{% endblock %}
+{% block content %}
+    <form action="{% url 'post:create' %} " method="post">
+        
+        <label for="title">
+            Title
+        </label>
+    <input type="text" id="title" name="title"/>
+    
+        <label for="content" >
+            Content
+        </label>
+        <input type="text">
+    </form>
+    <ul>
+        {% for post in all_post %}
+        <li>
+            {{ post.title }}
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
