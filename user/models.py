@@ -6,11 +6,18 @@ class User(models.Model):
     lastName = models.CharField(max_length=20)
     PassWord = models.CharField(max_length=100)
     BirthDay = models.DateField()
-    FullName = models.CharField(max_length=100)
+    FullName = models.CharField(max_length=100, blank=True)
     Hobbies = models.CharField(max_length=100)
-    Description = models.CharField(max_length=100)
-    def __str__(self):
+    Description = models.TextField()
+
+    # def fillFullName(self):
+    #     self.FullName = self.firstName + " " +self.lastName
+
+    def save(self, *args, **kwargs):
         self.FullName = self.firstName + " " + self.lastName
+        super().save(*args, **kwargs)
+
+    def __str__(self):
         return self.FullName
 
 class Group(models.Model):
@@ -21,7 +28,7 @@ class Group(models.Model):
     )
     Name = models.CharField(max_length=100)
     Permission = models.IntegerField(max_length=1, choices=CHOICE)
-    Description = models.CharField(max_length=100)
+    Description = models.TextField()
     user = models.ManyToManyField(User, through="UserGroup")
 
     def __str__(self):
@@ -38,7 +45,8 @@ class Role(models.Model):
         (6, 'CREATOR'),
     )
     Permission = models.IntegerField(max_length=1, choices=CHOICE)
-    Description = models.CharField(max_length=100)
+    Description = models.TextField()
+    user = models.ManyToManyField(User, through="UserRole")
 
     def __str__(self):
         return self.Name
