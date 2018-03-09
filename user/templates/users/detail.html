@@ -1,70 +1,80 @@
-
 {% extends "index.html" %}
 {% load static %}
 {% block title %}
-    <title>Người dùng</title>
+
+    <title>{{ title }}</title>
 {% endblock %}
+
+
 {% block content %}
-    <button type="button" class="btn btn-primary" data-toggle = "modal" data-target = "#new_user">
-        Create a new User
+    <button type="button" class="btn btn-primary" data-toggle = "modal" data-target = "#EditUser" id="loadUser">
+        <i class="fa fa-pencil"></i>
     </button>
-    <div class="modal fade" id="new_user" role="dialog" tabindex="-1">
-        <div class="modal-dialog" role="document">
+
+    <button type="button" class="btn btn-dangerous" id="delete">
+        <i class="fa fa-trash"></i>
+    </button>
+    <div class="modal fade" id="EditUser" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create New User</h5>
+                    <h5 class="modal-title">Edit User</h5>
                     <button type="button" class="close" data-dismiss = "modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-{#                <form action="{% url 'user:create' %}" method="post">#}
-                <form method="post">
+    {#                <form action="{% url 'user:create' %}" method="post">#}
+                <form method="post" class="from-horizontal">
                     <div class="modal-body">
                         {% csrf_token %}
                         <div class="form-group">
-                            <input type="text" name="firstname" id = "firstname" placeholder="First name" class="form-control">
-                            <p style="color: red" id="firstname_failure"></p>
+                            <label class="control-label col-md-2" for="firstname">First name:</label>
+                            <div class="col-md-10">
+                                <input type="text" name="firstname" id = "firstname" placeholder="First name" class="form-control">
+                            </div>
                         </div>
                         <div class="form-group">
                             <input type="text" name="lastname" placeholder="Last name" class="form-control">
-                            <p style="color: red" id="lastname_failure"></p>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="password" placeholder="Password" class="form-control">
-                            <p style="color: red" id="password_failure"></p>
+                            <input type="password" name="password" placeholder="Password" class="form-control">
                         </div>
                         <div class="form-group">
                             <input type="text" name="description" placeholder="Description" class="form-control">
-                            <p style="color: red" id="description_failure"></p>
                         </div>
                         <div class="form-group">
                             <input type="date" name="birthday" placeholder="BirthDay" class="form-control">
-                            <p style="color: red" id="birthday_failure"></p>
                         </div>
                         <div class="form-group">
                             <input type="text" name="hobbies" placeholder="Hobbies" class="form-control">
-                            <p style="color: red" id="hobbies_failure"></p>
                         </div>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" name = "create" id="submit">Create</button>
+                        <button type="button" class="btn btn-primary" name = "update" id="update">Update</button>
                     </div>
                 </form>
 
             </div>
         </div>
+
     </div>
 
-    <ul>
-    {% for user in users %}
-        <li>
-            <a href="{% url 'user:details' user.id %}">
-                {{ user.FullName }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
+    <h5>USER NAME: {{ user.FullName }}</h5>
+        <ul>
+            <li>
+                {{ user.firstName }}
+            </li>
+            <li>
+                {{ user.lastName }}
+            </li>
+            <li>
+                {{ user.BirthDay }}
+            </li>
+            <li>
+                {{ user.Description }}
+            </li>
+        </ul>
     <script src="{% static "js/user/user.js" %}"></script>
 {% endblock %}

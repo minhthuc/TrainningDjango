@@ -10,9 +10,6 @@ class User(models.Model):
     Hobbies = models.CharField(max_length=100)
     Description = models.TextField()
 
-    # def fillFullName(self):
-    #     self.FullName = self.firstName + " " +self.lastName
-
     def save(self, *args, **kwargs):
         self.FullName = self.firstName + " " + self.lastName
         super().save(*args, **kwargs)
