@@ -1,8 +1,9 @@
-from user.models import User, Role, Group
+from user.models import User, Role, Group, UserRole, UserGroup
 from django.shortcuts import render, get_object_or_404
 from pdb import set_trace as byebug
 from django.http import JsonResponse
 from django.core import serializers
+import json
 
 
 def index(request):
@@ -154,8 +155,77 @@ def delete(request, user_id):
         })
 
 
+def getUser(request):
+    user = User.objects.get(pk = request.POST['user_id'])
+    # byebug()
+    return JsonResponse(serializers.serialize('json', [user,]), safe=False)
+
+def search(request):
+    users = User.objects.filter(FullName__startswith= request.POST['firstname']).values("FullName","pk")
+    # return JsonResponse(serializers.serialize('json', list(users)), safe=False)
+    return JsonResponse({'result':list(users)})
+#role part
+
+
 def role_index(request):
-    return render(request, 'roles/index.html')
+    roles = Role.objects.order_by('Permission')
+    return render(request, 'roles/index.html', {'roles': roles, 'title': 'All Role'})
+
+
+def create_role(request):
+    if len(request.POST['firstname']) < 5:
+        return JsonResponse({
+            'failure':'Name of Role error'
+        })
+    try:
+        if 0 < int(request.POST['permission']) < 7:
+            pass
+        else:
+            return JsonResponse({
+                'failure': 'You must select permission'
+            })
+    except:
+        return JsonResponse({
+            'failure': 'You must select permission'
+        })
+    if request.POST['description'] == '':
+        return JsonResponse({
+            'failure': 'Description can not be blank'
+        })
+
+    new_role = Role(
+        Name=request.POST['firstname'],
+        Permission=request.POST['permission'],
+        Description=request.POST['description']
+    )
+    new_role.save()
+    if new_role:
+        return JsonResponse({
+            'success': 'Create successfully a new Role'
+        })
+    else:
+        return JsonResponse({
+            'failure': 'Create un-successfully a new Role'
+        })
+
+
+def edit_role(request):
+    pass
+
+
+def detail_role(request, role_id):
+    role = get_object_or_404(Role, pk = role_id)
+    # byebug()
+    context = {
+        'role':role,
+        'title':'Role details',
+        'users':role.userrole_set.all()
+    }
+    return render(request, "roles/detail.html", context)
+
+
+def get_choice_field_role(request):
+    return JsonResponse(Role._meta.get_field('Permission').choices, safe=False)
 
 
 def validateDateTime(input):
@@ -171,11 +241,21 @@ def validateDateTime(input):
         return False
 
 
-def getUser(request):
-    user = User.objects.get(pk = request.POST['user_id'])
-    # byebug()
-    return JsonResponse(serializers.serialize('json', [user,]), safe=False)
-
-def get_choice_field_role():
-    # byebug()
-    return JsonResponse(Role._meta.get_field('Permission').choices, safe=False)
+def add_user_to_role(request):
+    try:
+        role = Role.objects.get(id=request.POST['role_id'])
+        member = User.objects.get(id=request.POST['user_id'])
+        if role.userrole_set.filter(user=member).count()>0:
+            return JsonResponse({
+                'failure': 'The member %s already exists' % member.FullName
+            })
+        role.userrole_set.create(user=member)
+        return JsonResponse({
+            'success': 'The member %s added successfully' % member.FullName
+        })
+    except:
+        return JsonResponse(
+            {
+                'failure': 'The role or user does not exist'
+            }
+        )

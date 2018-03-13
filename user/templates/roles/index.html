@@ -1,11 +1,12 @@
 {% extends "index.html" %}
 {% load static %}
 {% block title %}
+    <title>{{ title }}</title>
 {% endblock %}
 
 {% block content %}
-    <button type="button" class="btn btn-primary" data-toggle = "modal" data-target = "#new_rule">
-        Create a new Role
+    <button type="button" class="btn btn-primary" data-toggle = "modal" data-target = "#new_rule" id="create">
+        <i class="fa fa-plus" aria-hidden="true"></i>
     </button>
     <div class="modal fade" id="new_rule" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
@@ -24,7 +25,9 @@
                             <input type="text" name="firstname" id = "firstname" placeholder="Name" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="lastname" placeholder="Permission" class="form-control">
+                            <select id="Permission" class="form-control" name="permission">
+                                <option value="-" selected="selected" >Permission</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <input type="text" name="description" placeholder="Description" class="form-control">
@@ -42,10 +45,10 @@
     </div>
 
     <ul>
-    {% for user in users %}
+    {% for role in roles %}
         <li>
-            <a href="{% url 'user:details' user.id %}">
-                {{ user.FullName }}
+            <a href="{% url 'user:role_detail' role.id %}">
+               {{ role.get_Permission_display}} - {{ role.Name }}
             </a>
         </li>
     {% endfor %}

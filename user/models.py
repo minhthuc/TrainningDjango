@@ -50,9 +50,9 @@ class Role(models.Model):
 
 
 class UserGroup(models.Model):
-    userID = models.ForeignKey(User, on_delete=models.CASCADE)
-    groupID = models.ForeignKey(Group, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 class UserRole(models.Model):
-    userID = models.ForeignKey(User, on_delete=models.CASCADE)
-    roleID = models.ForeignKey(Role, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)

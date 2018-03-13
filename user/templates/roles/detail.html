@@ -1,0 +1,65 @@
+{% extends "index.html" %}
+{% load static %}
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.min.css' %}">
+    <button type="button" class="btn btn-primary" data-toggle = "modal" data-target = "#new_rule" id="create">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+    <div class="modal fade" id="new_rule" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Member </h5>
+                    <button type="button" class="close" data-dismiss = "modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+{#                <form action="{% url 'user:create' %}" method="post">#}
+                <form method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+{#                        <div class="form-group">#}
+                            <input type="text" hidden value="{{ role.id }}" id="role_id" name="role_id">
+{#                            #}
+{#                            <input type="text" name="firstname" id = "firstname" placeholder="Name" class="form-control">#}
+{#                        </div>#}
+
+                          <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Full Name" id="firstname"/>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary" id="search" type="button" onclick="searchUser()">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </div>
+                                </div>
+                                <div class="list-group" id="list_name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" name = "create" id="submit">Add</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+<h4>{{ role.Name }} - {{ role.get_Permission_display }}</h4>
+    <ul id="list_user">
+        {% for user in users %}
+        <li>
+            {{ user.user.FullName }}
+        </li>
+    {% endfor %}
+    </ul>
+    <script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>
+    <script src="{% static 'js/role/role.js' %}"></script>
+{% endblock %}
